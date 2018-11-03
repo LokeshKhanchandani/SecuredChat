@@ -49,6 +49,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
+
+
 class details implements Serializable {
     public byte[] key,msg;
     public String algo;
@@ -73,14 +75,12 @@ public class ChatActivity extends AppCompatActivity {
     EditText messageView;
     private String macAdress;
     private static byte[] algoKey = new byte[8];
-
     private  static  byte[] algoKeyAES=new byte[16];
     public static MessageAdapter messageAdapter;
     public static ListView messagesListView;
     public static String ALGO;
     private byte[] encryptedByte;
     private byte[] encryptedKey;
-
     Key publicKeys;
     static Key privateKeys;
     String message,decrypted;
@@ -93,14 +93,6 @@ public class ChatActivity extends AppCompatActivity {
     static byte[] decryptedBytes;
     byte[] encryptedBytes;
     byte[] signature;
-
-    public String intToIp(int i) {
-        return (i & 0xFF) + "." +
-                ((i >> 8 ) & 0xFF) + "." +
-                ((i >> 16) & 0xFF) + "." +
-                ((i >> 24) & 0xFF);
-    }
-
     private String encryptedMessage;
 
 
@@ -126,9 +118,6 @@ public class ChatActivity extends AppCompatActivity {
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
         publicKey = keyPair.getPublic();
         privateKey= keyPair.getPrivate();
-
-
-
         try {
             signature = createSignature(myIp,privateKey);
         } catch (NoSuchAlgorithmException e) {
@@ -144,13 +133,9 @@ public class ChatActivity extends AppCompatActivity {
         }
 
         messageView = (EditText) findViewById(R.id.editText);
-
         messageAdapter = new MessageAdapter(this);
         messagesListView = (ListView) findViewById(R.id.messages_view);
         messagesListView.setAdapter(messageAdapter);
-
-//        Thread myThread=new Thread(new ChatActivity.MyServer(getApplicationContext()));
-//        myThread.start();
 
         if(deviceName.isEmpty())
             deviceName = "Anonymous";
@@ -168,20 +153,6 @@ public class ChatActivity extends AppCompatActivity {
 
 
         Log.e("AlgoKey mac DES",algoKey+"");
-//        try{
-//            Socket s=new Socket(deviceIp,9700);
-////            DataOutputStream dos=new DataOutputStream(s.getOutputStream());
-////            dos.writeInt(algoKey.length);
-////            dos.write(algoKey);
-//
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-
-        //            InetAddress inetAddress = InetAddress. getLocalHost();
-//            myIp = inetAddress.getHostAddress();
-
-
     }
     @SuppressLint("LongLogTag")
     public void sendMessage(View view) throws Exception {
@@ -192,7 +163,7 @@ public class ChatActivity extends AppCompatActivity {
         //encryptedMessage = Base64.encodeToString(encryptedByte,Base64.DEFAULT);
         //encryptedKey = RSAEncrypt(Base64.encodeToString(algoKey,Base64.DEFAULT);d
         if(ALGO.equals("DES"))
-        myencryptedByte = RSAEncrypt(algoKey);
+            myencryptedByte = RSAEncrypt(algoKey);
         else
             myencryptedByte = RSAEncrypt(algoKeyAES);
         Log.e("Algo codeKey & RSAencKey",Base64.encodeToString(algoKey,Base64.DEFAULT)+" "+myencryptedByte);
@@ -223,6 +194,7 @@ public class ChatActivity extends AppCompatActivity {
         return signature.sign();
 
     }
+
     public static boolean verifySignature(String message,PublicKey key,byte[] sign) throws NoSuchAlgorithmException, UnsupportedEncodingException, NoSuchProviderException, InvalidKeyException, SignatureException, SignatureException {
         MessageDigest messageDigest = MessageDigest.getInstance("SHA-512");
         byte[] signBytes = messageDigest.digest(message.getBytes("UTF-8"));
@@ -232,6 +204,7 @@ public class ChatActivity extends AppCompatActivity {
          return signature.verify(sign);
 
     }
+
     public static byte[] encrypt(String value,String algo) {
         byte[] encrypted = null;
         try {
@@ -273,26 +246,27 @@ public class ChatActivity extends AppCompatActivity {
         }
         return original;
     }
-    /*public static byte[] RSADecrypt(byte[] encrypted) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
-        Cipher c= Cipher.getInstance("RSA");
-        c.init(Cipher.DECRYPT_MODE,privateKey);
-        byte[] decryptedBytes =c.doFinal(encrypted);
-        return decryptedBytes;
+//    public static byte[] RSADecrypt(byte[] encrypted) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+//        Cipher c= Cipher.getInstance("RSA");
+//        c.init(Cipher.DECRYPT_MODE,privateKey);
+//        byte[] decryptedBytes =c.doFinal(encrypted);
+//        return decryptedBytes;
+//
+//    }
+//    public static byte[] RSAEncrypt(String message) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
+//        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+//        keyPairGenerator.initialize(2048);
+//        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+//        publicKey = keyPair.getPublic();
+//        privateKey= keyPair.getPrivate();
+//        Cipher c = Cipher.getInstance("RSA");
+//        c.init(Cipher.ENCRYPT_MODE,publicKey);
+//        byte[] encryptedByte = c.doFinal(message.getBytes("UTF-8"));
+//        Log.e("Size",encryptedByte.length+"");
+//        return encryptedByte;
+//
+//    }
 
-    }
-    public static byte[] RSAEncrypt(String message) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, UnsupportedEncodingException, BadPaddingException, IllegalBlockSizeException {
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-        keyPairGenerator.initialize(2048);
-        KeyPair keyPair = keyPairGenerator.generateKeyPair();
-        publicKey = keyPair.getPublic();
-        privateKey= keyPair.getPrivate();
-        Cipher c = Cipher.getInstance("RSA");
-        c.init(Cipher.ENCRYPT_MODE,publicKey);
-        byte[] encryptedByte = c.doFinal(message.getBytes("UTF-8"));
-        Log.e("Size",encryptedByte.length+"");
-        return encryptedByte;
-
-    }*/
     public byte[] RSAEncrypt(byte[] algoKey) throws Exception
     {
         kpg= KeyPairGenerator.getInstance("RSA");//generating a key pair
@@ -322,27 +296,6 @@ public class ChatActivity extends AppCompatActivity {
         return decryptedBytes;
     }
 
-//    public static class rsarecieve implements Runnable{
-//
-//    }
-//    class ShareKeyTask extends AsyncTask<String,Void,String>
-//    {
-//        private String ip;
-//        private byte[] rsakey;
-//        public ShareKeyTask(String ip,byte[] rsakey){
-//            this.ip=ip;
-//            this.rsakey=rsakey;
-//        }
-//
-//        @Override
-//        protected String doInBackground(String... strings) {
-//            try{
-//                Socket
-//            }
-//            return null;
-//        }
-//    }
-//
     class BackgroundTask extends AsyncTask<String,Void,String>
     {
 
@@ -464,7 +417,7 @@ public class ChatActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(mContext, "waiting for client", Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "waiting for client", Toast.LENGTH_SHORT).show();
                     }
                 });
                 do {

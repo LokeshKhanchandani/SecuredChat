@@ -1,6 +1,7 @@
 package com.example.lokesh.amul;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,11 +33,11 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
-
-    EditText eip,emsg;
     ListView slv;
     String macAddress;
     String myIp;
@@ -47,21 +48,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-//        StrictMode.setThreadPolicy(policy);
-        //            InetAddress localhost = InetAddress.getLocalHost();
-//            myIp=localhost.getHostAddress().trim();
         myIp = getIPAddress(true);
-       // long ip = Long.parseLong(myIp, 16);
 
              Log.e("My Ip",myIp);
+        TextView iptext=(TextView)findViewById(R.id.myip);
+        iptext.setText("My current IP is "+myIp);
         slv = (ListView)findViewById(R.id.list);
+
+        //extracting all local connected IPs of network
         ExtractLocalIps extractLocalIps=new ExtractLocalIps();
         extractLocalIps.execute();
+
+        //setting server for connection
         Thread myThread=new Thread(new ChatActivity.MyServer(getApplicationContext()));
         myThread.start();
 
+
+        final ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+        dialog.setTitle("Loading connected IPs...");
+        dialog.setMessage("Please wait.");
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.show();
+
+        long delayInMillis = 25000;
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                dialog.dismiss();
+            }
+        }, delayInMillis);
 
 
 
@@ -202,13 +219,8 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                         builder.show();
-
-
-
                     }
                 });
-
-
             }
         }
     }

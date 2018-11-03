@@ -9,6 +9,15 @@
     tools:context="com.example.lokesh.amul.MainActivity">
 
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="My currrent IP is "
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:id="@+id/myip"/>
     <ListView
         android:id="@+id/list"
         android:paddingLeft="10dp"
