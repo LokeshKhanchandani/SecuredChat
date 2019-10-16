@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.lokesh.amul">
 
+    <!-- Wifi permissions     -->
     <uses-feature android:name="android.hardware.wifi" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -26,5 +27,6 @@
         <activity android:name=".ChatActivity" />
         <activity android:name=".TestActivity"></activity>
     </application>
-
+    
+    <!-- This project has basically 3 activities MainActivity, ChatActivity and TestActivity in which MainActivity is launcher activity      -->
 </manifest>
