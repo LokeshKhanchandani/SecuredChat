@@ -5,7 +5,8 @@
 ### Features implemented
 * Fetch all local connected IPs in subnet
 * Sends messages with the help of socket programming
-* Provide option for **AES** and **DES** encryption
+* Provide option for **AES** and **DES** encryption.
+* The encryption ensures that the chat is wholly secured and has been tested by outside attacks.
 * Transfer of key through **RSA** Algorithm
 * Used SHA-512 as a hash function for data integrity
 
